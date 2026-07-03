@@ -1,26 +1,66 @@
-# OrthoNow — Interview Deliverables
+# OrthoNow Healthcare Growth Platform
 
-This package contains the three completed tasks:
+Developer Assignment - Web Development & Martech
 
-1. **Task01_GTM_GA4_Tracking_Plan.md**
-   Complete GTM event schema, booking-funnel tracking design, real dataLayer.push()
-   JSON for each step, Google Ads conversion recommendation, and full technical flow.
+This repository contains the completed OrthoNow developer assignment tasks:
+GTM + GA4 tracking setup, landing page build, and integration design.
 
-2. **Task02_Landing_Page/orthonow-landing.html**
-   Self-contained HTML/CSS/vanilla-JS landing page for the "Book a Consultation" campaign.
-   Open the file directly in a browser — no server required. Fires
-   `window.dataLayer.push({event: 'consultation_form_submitted', ...})` only on a
-   successful form submit (visible via DevTools Console → `window.dataLayer`), never
-   on page load.
 
-   Note: this package does not include a PageSpeed Insights screenshot. Generating a
-   genuine score requires hosting the file at a reachable URL (or running Lighthouse
-   locally in Chrome DevTools) — that step should be run in your own environment
-   before submission, rather than a claimed/fabricated score.
+## Task 01 - GTM & GA4 Tracking Plan
 
-3. **Task03_Integration_Design_Answer.md**
-   HubSpot + Karix WhatsApp + Google Ads integration architecture, including the
-   corrected phone-vs-name deduplication logic for the "same phone number, different
-   patient" edge case.
+File:
+Task01_GTM_GA4_Tracking_Plan.md
 
-Generated: July 3, 2026
+Includes:
+
+- Complete GTM event schema
+- GA4 event tracking structure
+- 3-step booking funnel tracking
+- dataLayer.push() implementation for booking steps
+- GA4 funnel drop-off tracking approach
+- Google Ads conversion recommendation
+
+
+## Task 02 - Landing Page Build
+
+File:
+Task02_Landing_Page/orthonow-landing.html
+
+Built using:
+
+- HTML
+- CSS
+- Vanilla JavaScript
+
+Includes:
+
+- Consultation landing page
+- Name and Phone form
+- Trust element
+- Primary CTA button
+- Mobile responsive design
+- GTM dataLayer push on successful form submit
+- Thank-you message without page reload
+
+
+## Task 03 - Integration Design
+
+File:
+Task03_Integration_Design_Answer.md
+
+Includes:
+
+- HubSpot CRM integration flow
+- Karix WhatsApp Business API flow
+- Google Ads conversion tracking
+- Phone number duplicate handling
+- Failure handling and monitoring approach
+
+
+## Submission
+
+Contains:
+
+- Task 01 tracking documentation
+- Task 02 working landing page
+- Task 03 integration write-up
