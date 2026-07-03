@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expert Orthopaedic Consultation in Bengaluru | OrthoNow</title>
+<meta name="description" content="Book a consultation with an orthopaedic specialist in Bengaluru. Diagnosis-first care for knee and back pain, with evening and weekend slots. 9 clinics, 42 specialists, 4.8★ rated.">
+
+<!--
+  ============================================================
+  ORTHONOW — CONSULTATION LANDING PAGE
+  ============================================================
+  Single self-contained file: HTML + internal CSS + vanilla JS.
+  No frameworks, no external fonts/libraries, no page reload on submit.
+  Design rationale for every major decision is documented in the
+  chat response that accompanies this file, and mirrored briefly
+  inline as comments near the relevant markup/CSS/JS.
+  ============================================================
+-->
+
+<style>
+  /* ==========================================================
+     1. DESIGN TOKENS
+     A small, named palette + type scale drives every decision
+     below. Colors avoid the generic "cream + terracotta" and
+     "near-black + neon" defaults: this is a clinical, data-led
+     palette (deep teal + warm amber CTA + muted vital green)
+     that reads as healthcare/trust rather than generic-AI-marketing.
+     ========================================================== */
+  :root{
+    --bg:            #F5F6F4;   /* clinical off-white, cool not warm */
+    --surface:       #FFFFFF;
+    --ink:           #101A22;   /* near-black navy for body text */
+    --ink-muted:     #55635E;
+    --teal-900:      #0B4D46;   /* primary brand color */
+    --teal-700:      #0F6B61;
+    --teal-050:      #E7F1EF;
+    --amber-500:     #E2872E;   /* single accent, reserved for CTA + focus */
+    --amber-600:     #C6721F;
+    --vital-600:     #2E7D4F;   /* trust/verification green */
+    --line:          #DCE3DF;
+    --line-strong:   #C4CEC9;
+    --danger:        #B3261E;
+
+    --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", system-ui, sans-serif;
+    --font-body:    -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", system-ui, sans-serif;
+    --font-mono:    ui-monospace, "SFMono-Regular", "Consolas", "Menlo", monospace;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+
+    --container: 1120px;
+  }
+
+  /* ==========================================================
+     2. RESET / BASE
+     Kept intentionally small — no CSS reset library. Only the
+     rules this page actually needs, to keep the stylesheet light
+     for Core Web Vitals / PageSpeed.
+     ========================================================== */
+  *, *::before, *::after{ box-sizing: border-box; }
+  html{ -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  img, svg{ display:block; max-width:100%; }
+  a{ color: inherit; }
+  button{ font-family: inherit; }
+
+  /* Respect reduced-motion preference even though the page ships
+     with no decorative animation by default (per brief). */
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  /* Visible focus state everywhere — accessibility floor, not optional. */
+  :focus-visible{
+    outline: 3px solid var(--amber-500);
+    outline-offset: 2px;
+  }
+
+  .container{
+    width:100%;
+    max-width: var(--container);
+    margin-inline:auto;
+    padding-inline: 20px;
+  }
+
+  /* Skip link for keyboard/screen-reader users */
+  .skip-link{
+    position:absolute; left:-9999px; top:auto;
+    background: var(--teal-900); color:#fff;
+    padding:10px 16px; border-radius: 0 0 var(--radius-sm) 0;
+    z-index: 100;
+  }
+  .skip-link:focus{ left:0; top:0; }
+
+  /* ==========================================================
+     3. HEADER
+     ========================================================== */
+  .site-header{
+    position: sticky; top:0; z-index: 50;
+    background: rgba(245,246,244,0.92);
+    backdrop-filter: saturate(140%) blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  .site-header .container{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-block: 12px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:8px;
+    font-family: var(--font-display);
+    font-weight:800; font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    text-decoration:none;
+    color: var(--teal-900);
+  }
+  .brand-mark{ width:26px; height:26px; flex:none; }
+  .header-call{
+    display:flex; align-items:center; gap:8px;
+    font-size: 0.85rem;
+    font-weight:600;
+    text-decoration:none;
+    color: var(--teal-900);
+    border:1px solid var(--line-strong);
+    padding:8px 12px;
+    border-radius: 999px;
+    white-space:nowrap;
+  }
+  .header-call:hover{ border-color: var(--teal-700); }
+  .header-call svg{ width:16px; height:16px; }
+
+  /* ==========================================================
+     4. HERO
+     Two-column on desktop (message left, form right — the form
+     is the primary conversion object and sits where F-pattern
+     reading lands the eye after the headline). Single column,
+     form-second-but-close on mobile so the promise is read first
+     but the form is still one scroll away, not buried.
+     ========================================================== */
+  .hero{
+    padding-block: 40px 56px;
+  }
+  .hero .container{
+    display:grid;
+    gap: 32px;
+  }
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal-700);
+    display:flex; align-items:center; gap:8px;
+    margin-bottom: 14px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:8px; height:8px; border-radius:50%;
+    background: var(--vital-600);
+    flex:none;
+  }
+  .hero h1{
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.9rem, 5.2vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+    color: var(--ink);
+  }
+  .hero h1 em{
+    font-style: normal;
+    color: var(--teal-900);
+    background: linear-gradient(transparent 62%, var(--teal-050) 62%);
+  }
+  .hero .subhead{
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    color: var(--ink-muted);
+    max-width: 46ch;
+    margin: 0 0 24px;
+  }
+
+  /* Trust strip: mono-set numbers give it a "clinical data" register
+     rather than decorative badges — structure encodes real stats. */
+  .trust-strip{
+    display:flex; flex-wrap:wrap; gap: 18px 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .trust-stat{ min-width: 84px; }
+  .trust-stat .num{
+    display:block;
+    font-family: var(--font-mono);
+    font-weight:700;
+    font-size: 1.25rem;
+    color: var(--teal-900);
+  }
+  .trust-stat .label{
+    display:block;
+    font-size: 0.72rem;
+    letter-spacing:0.03em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+  }
+
+  /* ---- Form card ---- */
+  .form-card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: 0 1px 2px rgba(16,26,34,0.04), 0 8px 24px rgba(16,26,34,0.06);
+  }
+  .form-card h2{
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .form-card .form-sub{
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+    margin: 0 0 20px;
+  }
+
+  .field{ margin-bottom: 16px; }
+  .field label{
+    display:block;
+    font-size: 0.85rem;
+    font-weight:600;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .field input{
+    width:100%;
+    font-size: 1rem;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--line-strong);
+    background: #fff;
+    color: var(--ink);
+  }
+  .field input::placeholder{ color:#8B9791; }
+  .field input:focus{
+    border-color: var(--teal-700);
+  }
+  .field input[aria-invalid="true"]{
+    border-color: var(--danger);
+  }
+  .field .error-msg{
+    display:block;
+    min-height: 1.1em;
+    font-size: 0.8rem;
+    color: var(--danger);
+    margin-top: 6px;
+  }
+
+  .btn-primary{
+    width:100%;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    background: var(--amber-500);
+    color: #201203;
+    font-weight:800;
+    font-size: 1rem;
+    border:none;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    cursor:pointer;
+  }
+  .btn-primary:hover{ background: var(--amber-600); }
+  .btn-primary:disabled{
+    opacity:0.7; cursor:progress;
+  }
+
+  .form-microcopy{
+    display:flex; align-items:flex-start; gap:8px;
+    font-size: 0.76rem;
+    color: var(--ink-muted);
+    margin-top: 14px;
+  }
+  .form-microcopy svg{ width:14px; height:14px; flex:none; margin-top:2px; color: var(--vital-600); }
+
+  /* ---- Thank-you state ---- */
+  .thankyou{
+    text-align:left;
+    padding: 8px 0 4px;
+  }
+  .thankyou .ty-badge{
+    width:44px; height:44px; border-radius:50%;
+    background: var(--teal-050); color: var(--vital-600);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom: 14px;
+  }
+  .thankyou h2{
+    font-family: var(--font-display);
+    font-size: 1.2rem; margin: 0 0 8px;
+  }
+  .thankyou p{ font-size:0.92rem; color: var(--ink-muted); margin:0 0 4px; }
+
+  /* ==========================================================
+     5. SIGNATURE DIVIDER
+     One deliberate visual signature: a "vitals line" that fuses
+     an ECG waveform with the angled contour of a knee joint —
+     ties directly to "orthopaedic + expert medical read" without
+     using a stock photo or icon set. Static (no animation), so
+     it costs nothing at runtime and respects the "avoid
+     animation" requirement while still being distinctive.
+     ========================================================== */
+  .vitals-divider{
+    padding-block: 4px;
+  }
+  .vitals-divider svg{ width:100%; height:auto; color: var(--teal-700); }
+
+  /* ==========================================================
+     6. BENEFITS
+     ========================================================== */
+  .section{ padding-block: 48px; }
+  .section-head{ max-width: 60ch; margin-bottom: 28px; }
+  .section-head .eyebrow{ margin-bottom: 10px; }
+  .section-head h2{
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    letter-spacing: -0.01em;
+    margin:0 0 8px;
+  }
+  .section-head p{ color: var(--ink-muted); margin:0; }
+
+  .benefit-grid{
+    display:grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+  }
+  .benefit-card{
+    background: var(--surface);
+    border:1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 20px;
+  }
+  .benefit-card .icon{
+    width:36px; height:36px;
+    border-radius: 8px;
+    background: var(--teal-050);
+    color: var(--teal-900);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom: 14px;
+  }
+  .benefit-card h3{
+    font-size: 1.02rem;
+    margin: 0 0 6px;
+    letter-spacing:-0.005em;
+  }
+  .benefit-card p{
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    margin:0;
+  }
+
+  /* ==========================================================
+     7. TRUST / CREDENTIALS SECTION
+     Placed directly after benefits and before the final CTA:
+     objections ("is this legit / worth my time") peak right
+     after the reader has been told what they'll get, so proof
+     needs to land there — not buried at the page bottom where
+     most mobile users on a paid-search visit never scroll.
+     ========================================================== */
+  .trust-section{
+    background: var(--teal-900);
+    color: #EAF3F1;
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+  }
+  .trust-section .section-head h2,
+  .trust-section .section-head p{ color: #EAF3F1; }
+  .trust-section .eyebrow{ color:#9FD9CD; }
+  .trust-section .eyebrow::before{ background:#9FD9CD; }
+
+  .trust-band{
+    display:grid; gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    padding-top: 8px;
+  }
+  .trust-band .num{
+    font-family: var(--font-mono);
+    font-weight:700;
+    font-size: 1.7rem;
+    color: #fff;
+    display:block;
+  }
+  .trust-band .label{
+    font-size: 0.78rem;
+    color: #B9D8D2;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .trust-note{
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    font-size: 0.88rem;
+    color: #CFE6E1;
+    max-width: 60ch;
+  }
+
+  /* ==========================================================
+     8. FINAL CTA BAND
+     ========================================================== */
+  .final-cta{
+    text-align:center;
+    padding: 40px 20px;
+  }
+  .final-cta h2{
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3.4vw, 2rem);
+    margin: 0 0 10px;
+    letter-spacing:-0.01em;
+  }
+  .final-cta p{ color: var(--ink-muted); margin: 0 0 22px; }
+  .btn-secondary{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--amber-500);
+    color:#201203;
+    font-weight:800;
+    padding: 14px 26px;
+    border-radius: var(--radius-sm);
+    text-decoration:none;
+    border:none;
+    font-size:1rem;
+    cursor:pointer;
+  }
+  .btn-secondary:hover{ background: var(--amber-600); }
+
+  /* ==========================================================
+     9. FOOTER
+     ========================================================== */
+  .site-footer{
+    border-top: 1px solid var(--line);
+    padding-block: 24px;
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+  }
+  .site-footer .container{
+    display:flex; flex-wrap:wrap; gap:10px 20px;
+    justify-content:space-between;
+  }
+
+  /* ==========================================================
+     10. RESPONSIVE — desktop enhancement (mobile-first base above)
+     ========================================================== */
+  @media (min-width: 860px){
+    .hero .container{
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items:start;
+    }
+    .form-card{ position: sticky; top: 84px; }
+    .benefit-grid{ grid-template-columns: repeat(3, 1fr); }
+    .trust-band{ grid-template-columns: repeat(4, 1fr); }
+    .section{ padding-block: 72px; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#consultation-form">Skip to booking form</a>
+
+<!-- ==========================================================
+     HEADER
+     Sticky, minimal: logo + a one-tap call fallback for users who
+     came from a paid ad but prefer to talk rather than fill a form.
+     Kept lightweight (no nav menu) — a landing page has one job.
+     ========================================================== -->
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="#top">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M2 12h5l2-6 4 12 2-6h7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      OrthoNow
+    </a>
+    <a class="header-call" href="tel:+918046778899" data-call-source="header">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.7 5.1 6.5 6.5l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C11 21 3 13 3 4.9c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.4 0 .8-.2 1L6.6 10.8Z" stroke="currentColor" stroke-width="1.8"/></svg>
+      +91 80 4677 8899
+    </a>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ==========================================================
+       HERO
+       Headline: names the exact hesitation the audience feels
+       ("shouldn't wait for someday") rather than a generic
+       "Book Now" — working professionals delay ortho care because
+       pain is manageable-but-persistent, not acute. Subheadline
+       carries the campaign's functional promise (expert opinion,
+       fast access). CTA-bearing form sits beside/near the headline
+       so the primary action never requires a scroll on desktop and
+       is one scroll away on mobile.
+       ========================================================== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-copy">
+        <p class="eyebrow">Orthopaedic consultations · Bengaluru</p>
+        <h1>Knee or back pain shouldn't wait for <em>“someday.”</em></h1>
+        <p class="subhead">
+          Get a same-week opinion from an orthopaedic specialist — no referral needed,
+          evening and weekend slots available, and a plan before any talk of surgery.
+        </p>
+
+        <div class="trust-strip" aria-label="OrthoNow at a glance">
+          <div class="trust-stat">
+            <span class="num">4.8★</span>
+            <span class="label">2,300+ ratings</span>
+          </div>
+          <div class="trust-stat">
+            <span class="num">42</span>
+            <span class="label">Ortho specialists</span>
+          </div>
+          <div class="trust-stat">
+            <span class="num">9</span>
+            <span class="label">Bengaluru clinics</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- FORM CARD (primary conversion object) ---- -->
+      <div class="form-card">
+        <div id="form-wrapper">
+          <h2>Book your consultation</h2>
+          <p class="form-sub">Two details — we'll call you back to confirm a slot.</p>
+
+          <form id="consultation-form" novalidate>
+            <div class="field">
+              <label for="cf-name">Full name</label>
+              <input
+                type="text"
+                id="cf-name"
+                name="name"
+                autocomplete="name"
+                placeholder="e.g. Aditi Rao"
+                aria-required="true"
+                aria-describedby="cf-name-error"
+              >
+              <span class="error-msg" id="cf-name-error" role="alert"></span>
+            </div>
+
+            <div class="field">
+              <label for="cf-phone">Mobile number</label>
+              <input
+                type="tel"
+                id="cf-phone"
+                name="phone"
+                inputmode="numeric"
+                autocomplete="tel"
+                placeholder="10-digit mobile number"
+                aria-required="true"
+                aria-describedby="cf-phone-error"
+              >
+              <span class="error-msg" id="cf-phone-error" role="alert"></span>
+            </div>
+
+            <button type="submit" class="btn-primary" id="cf-submit">
+              Book free consultation
+            </button>
+
+            <p class="form-microcopy">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Z" stroke="currentColor" stroke-width="1.8"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Your number is only used to confirm your appointment. No spam calls.
+            </p>
+          </form>
+        </div>
+        <!-- Thank-you state is injected here on successful submit; see JS. -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Signature element: static ECG-meets-knee-joint line, used once
+       as a section divider — the one deliberate visual flourish. -->
+  <div class="vitals-divider container" aria-hidden="true">
+    <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
+      <path d="M0 20 H380 L410 6 L430 34 L450 20 H520 L545 -2 L565 34 L585 20 H1000"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+    </svg>
+  </div>
+
+  <!-- ==========================================================
+       BENEFITS
+       Three cards, each answering a distinct objection: "will I be
+       pushed into surgery," "can I fit this around work," and
+       "is there a clinic near me." Kept to three — enough to cover
+       the real hesitations for this audience without diluting focus.
+       ========================================================== -->
+  <section class="section container">
+    <div class="section-head">
+      <p class="eyebrow">Why patients choose OrthoNow</p>
+      <h2>Built for people who can't take a full day off for a doctor's visit</h2>
+      <p>Straightforward, diagnosis-first orthopaedic care — designed around a working week, not a hospital's.</p>
+    </div>
+
+    <div class="benefit-grid">
+      <article class="benefit-card">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M9 3v6l-4 8a2 2 0 0 0 1.8 2.9h10.4A2 2 0 0 0 19 17l-4-8V3" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 3h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Diagnosis before treatment</h3>
+        <p>Your specialist reviews scans and history first — nothing is recommended, including surgery, before the cause is confirmed.</p>
+      </article>
+
+      <article class="benefit-card">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/></svg>
+        </div>
+        <h3>Built around your work week</h3>
+        <p>Evening and Saturday slots at every clinic, so a consultation doesn't have to cost you a day of leave.</p>
+      </article>
+
+      <article class="benefit-card">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" stroke="currentColor" stroke-width="1.8"/></svg>
+        </div>
+        <h3>9 clinics across Bengaluru</h3>
+        <p>Koramangala, Indiranagar, Whitefield and more — find one on your commute, not across the city.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       TRUST / CREDENTIALS
+       ========================================================== -->
+  <section class="container">
+    <div class="trust-section">
+      <div class="section-head">
+        <p class="eyebrow">Credentials, not claims</p>
+        <h2>Every consultation is led by a qualified orthopaedic surgeon</h2>
+        <p>The numbers below are current across all nine OrthoNow clinics in Bengaluru.</p>
+      </div>
+
+      <div class="trust-band" aria-label="OrthoNow trust statistics">
+        <div>
+          <span class="num">4.8★</span>
+          <span class="label">Avg. rating, 2,300+ reviews</span>
+        </div>
+        <div>
+          <span class="num">42</span>
+          <span class="label">MBBS, MS (Ortho) specialists</span>
+        </div>
+        <div>
+          <span class="num">9</span>
+          <span class="label">Clinics in Bengaluru</span>
+        </div>
+        <div>
+          <span class="num">48 hrs</span>
+          <span class="label">Typical time to consultation</span>
+        </div>
+      </div>
+
+      <p class="trust-note">
+        All specialists are independently verified MBBS graduates holding an MS in Orthopaedics.
+        Consultation notes and imaging are shared with you directly — you keep a copy of everything.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       FINAL CTA
+       Repeats the single action in the same words used elsewhere
+       ("Book") so the vocabulary stays consistent end to end.
+       ========================================================== -->
+  <section class="final-cta container">
+    <h2>Still deciding? A consultation doesn't commit you to anything.</h2>
+    <p>Talk to a specialist, understand what's actually going on, then decide.</p>
+    <a class="btn-secondary" href="#consultation-form">
+      Book free consultation
+    </a>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© 2026 OrthoNow. All rights reserved.</span>
+    <span>9 clinics · Bengaluru</span>
+    <a href="tel:+918046778899" data-call-source="footer">+91 80 4677 8899</a>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   VANILLA JS — FORM VALIDATION, ASYNC SUBMIT, DATALAYER PUSH
+   ============================================================
+   Design intent:
+   - No page reload (preventDefault + in-place DOM swap to a
+     thank-you state).
+   - dataLayer.push() fires ONLY after a successful submit —
+     never on page load, never on a failed/invalid attempt.
+   - Kept dependency-free and small: this is the only JS the
+     page ships, in line with "avoid unnecessary JavaScript."
+   ============================================================ */
+(function () {
+  "use strict";
+
+  // Initialize the dataLayer array itself on load (this does NOT
+  // push an event — it only ensures the array exists so GTM's
+  // snippet, wherever it's installed, has something to read).
+  window.dataLayer = window.dataLayer || [];
+
+  var form        = document.getElementById('consultation-form');
+  var nameInput   = document.getElementById('cf-name');
+  var phoneInput  = document.getElementById('cf-phone');
+  var nameError   = document.getElementById('cf-name-error');
+  var phoneError  = document.getElementById('cf-phone-error');
+  var submitBtn   = document.getElementById('cf-submit');
+  var formWrapper = document.getElementById('form-wrapper');
+
+  var PHONE_PATTERN = /^[6-9]\d{9}$/; // Indian mobile numbers: 10 digits, starts 6-9
+
+  function setError(input, errorEl, message) {
+    if (message) {
+      input.setAttribute('aria-invalid', 'true');
+      errorEl.textContent = message;
+    } else {
+      input.removeAttribute('aria-invalid');
+      errorEl.textContent = '';
+    }
+  }
+
+  function validate() {
+    var isValid = true;
+
+    var nameVal = nameInput.value.trim();
+    if (nameVal.length < 2) {
+      setError(nameInput, nameError, 'Enter your full name.');
+      isValid = false;
+    } else {
+      setError(nameInput, nameError, '');
+    }
+
+    var phoneVal = phoneInput.value.trim();
+    if (!PHONE_PATTERN.test(phoneVal)) {
+      setError(phoneInput, phoneError, 'Enter a valid 10-digit mobile number.');
+      isValid = false;
+    } else {
+      setError(phoneInput, phoneError, '');
+    }
+
+    return isValid;
+  }
+
+  function renderThankYou() {
+    formWrapper.innerHTML =
+      '<div class="thankyou" role="status" aria-live="polite">' +
+        '<div class="ty-badge" aria-hidden="true">' +
+          '<svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="m5 13 4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '</div>' +
+        '<h2>Request received</h2>' +
+        '<p>A member of the OrthoNow team will call you within the next few hours to confirm your slot.</p>' +
+        '<p>In a hurry? Call us directly at <a href="tel:+918046778899">+91 80 4677 8899</a>.</p>' +
+      '</div>';
+  }
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault(); // No page reload, per requirement.
+
+    if (!validate()) {
+      // Move focus to the first invalid field for keyboard/screen-reader users.
+      var firstInvalid = form.querySelector('[aria-invalid="true"]');
+      if (firstInvalid) firstInvalid.focus();
+      return; // dataLayer.push() must NOT fire on a failed/invalid attempt.
+    }
+
+    // Simulate an async submit (e.g. to a booking API). Replace this
+    // block with a real fetch() call to your backend in production;
+    // the dataLayer.push() must stay gated behind a *successful* response.
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Booking your slot…';
+
+    setTimeout(function () {
+      var payload = {
+        name: nameInput.value.trim(),
+        phone: phoneInput.value.trim()
+      };
+
+      // In production: send `payload` to the booking backend here,
+      // then only proceed to renderThankYou()/dataLayer.push() inside
+      // the success callback of that request.
+
+      renderThankYou();
+
+      // --------------------------------------------------------
+      // GTM / GA4 HOOK — fires ONLY on confirmed successful submit.
+      // --------------------------------------------------------
+      window.dataLayer.push({
+        event: 'consultation_form_submitted',
+        page_name: 'consultation_landing_bengaluru',
+        campaign_name: 'orthonow_knee_back_pain_bengaluru',
+        form_name: 'hero_consultation_form',
+        clinic_city: 'Bengaluru',
+        value: 1,
+        currency: 'INR'
+      });
+    }, 700);
+  });
+})();
+</script>
+
+</body>
+</html>
